@@ -27,13 +27,42 @@ with DAG(
     catchup=True,
     tags=['movie', 'megabox', 'team'],
 ) as dag:
+    
+    def extract():
+        from movie_extract.movie_e import ice_breaking
+        ice_breaking()
+    
+    def transform():
+        from transform.call import ice_breaking
+        ice_breaking()
+
+    def load():
+        from de32_megabox_l.movie_l import ice_breaking
+        ice_breaking()
 
     start = EmptyOperator(task_id='start')
     
-    extract = EmptyOperator(task_id='movie.extract')
-    transform = EmptyOperator(task_id='movie.transform')
-    load = EmptyOperator(task_id='movie.load')
+    t_extract = PythonVirtualenvOperator(
+            task_id='movie.extract',
+            python_callable=extract,
+            requirements=["git+https://github.com/DE32megabox/extract.git@dev/d1.0.0"],
+            system_site_packages=False
+    )
+
+    t_transform = PythonVirtualenvOperator(
+            task_id='movie.transform',
+            python_callable=transform,
+            requirements=["git+https://github.com/DE32megabox/transform.git@dev/d1.0.1"],
+            system_site_packages=False
+    )
+    
+    t_load = PythonVirtualenvOperator(
+            task_id='movie.load',
+            python_callable=load,
+            requirements=["git+https://github.com/DE32megabox/load.git@dev/d1.0.0"],
+            system_site_packages=False
+    )
 
     end = EmptyOperator(task_id='end')
     
-    start >> extract >> transform >> load >> end
+    start >> t_extract >> t_transform >> t_load >> end
