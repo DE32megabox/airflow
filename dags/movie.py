@@ -33,9 +33,11 @@ with DAG(
         ice_breaking()
     
     def transform():
+        from transform.call import ice_breaking
         ice_breaking()
 
     def load():
+        from de32_megabox_l.movie_l import ice_breaking
         ice_breaking()
 
     start = EmptyOperator(task_id='start')
@@ -50,13 +52,13 @@ with DAG(
     transform = PythonVirtualenvOperator(
             task_id='movie.transform',
             python_callable=transform,
-            requirements=[]
+            requirements=["git+https://github.com/DE32megabox/transform.git@dev/d1.0.1"]
     )
     
     load = PythonVirtualenvOperator(
             task_id='movie.load',
             python_callable=load,
-            requirements=[]
+            requirements=["git+https://github.com/DE32megabox/load.git@dev/d1.0.0"]
     )
 
     end = EmptyOperator(task_id='end')
