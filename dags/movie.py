@@ -41,7 +41,8 @@ with DAG(
     
     extract = PythonVirtualenvOperator(
             task_id='movie.extract',
-            python_callable=extract
+            python_callable=extract,
+            requirements=["git+https://github.com/DE32megabox/extract.git"]
     )
 
     transform = PythonVirtualenvOperator(
