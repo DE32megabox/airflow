@@ -27,12 +27,32 @@ with DAG(
     catchup=True,
     tags=['movie', 'megabox', 'team'],
 ) as dag:
+    
+    def extract():
+        return
+    
+    def transform():
+        return
+    
+    def load():
+        return
 
     start = EmptyOperator(task_id='start')
     
-    extract = EmptyOperator(task_id='movie.extract')
-    transform = EmptyOperator(task_id='movie.transform')
-    load = EmptyOperator(task_id='movie.load')
+    extract = PythonVirtualenvOperator(
+            task_id='movie.extract',
+            python_callable=extract
+    )
+
+    transform = PythonVirtualenvOperator(
+            task_id='movie.transform',
+            python_callable=transform
+    )
+    
+    load = PythonVirtualenvOperator(
+            task_id='movie.load',
+            python_callable=load
+    )
 
     end = EmptyOperator(task_id='end')
     
