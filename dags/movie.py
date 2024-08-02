@@ -33,10 +33,10 @@ with DAG(
         ice_breaking()
     
     def transform():
-        return
-    
+        ice_breaking()
+
     def load():
-        return
+        ice_breaking()
 
     start = EmptyOperator(task_id='start')
     
@@ -49,12 +49,14 @@ with DAG(
 
     transform = PythonVirtualenvOperator(
             task_id='movie.transform',
-            python_callable=transform
+            python_callable=transform,
+            requirements=[]
     )
     
     load = PythonVirtualenvOperator(
             task_id='movie.load',
-            python_callable=load
+            python_callable=load,
+            requirements=[]
     )
 
     end = EmptyOperator(task_id='end')
