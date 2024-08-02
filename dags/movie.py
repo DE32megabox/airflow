@@ -29,7 +29,8 @@ with DAG(
 ) as dag:
     
     def extract():
-        return
+        from movie_extract.movie_e import ice_breaking
+        ice_breaking()
     
     def transform():
         return
@@ -42,7 +43,8 @@ with DAG(
     extract = PythonVirtualenvOperator(
             task_id='movie.extract',
             python_callable=extract,
-            requirements=["git+https://github.com/DE32megabox/extract.git"]
+            requirements=["git+https://github.com/DE32megabox/extract.git@dev/d1.0.0"],
+            system_site_packages=False
     )
 
     transform = PythonVirtualenvOperator(
