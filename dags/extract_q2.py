@@ -28,7 +28,7 @@ with DAG(
     catchup=True,
     tags=['movie', 'megabox', 'team'],
 ) as dag:
-    
+     
     def extract(**kwargs):
         from movie_extract.movie_e import df2parquet
         date = kwargs['ds_nodash']
@@ -62,8 +62,7 @@ with DAG(
             system_site_packages=False,
             trigger_rule='all_done'
     )
-    
     end = EmptyOperator(task_id='end')
     
-    start >> branch_func >> [rm_dir, t_extract] >> end
+    start >> branch_op >> [rm_dir, t_extract] >> end
     rm_dir >> t_extract

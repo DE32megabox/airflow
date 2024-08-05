@@ -28,12 +28,12 @@ with DAG(
     catchup=True,
     tags=['movie', 'megabox', 'team'],
 ) as dag:
-    
+     
     def extract(**kwargs):
         from movie_extract.movie_e import df2parquet
         date = kwargs['ds_nodash']
         df = df2parquet(load_dt=date)
-    
+
     def branch_func(ds_nodash):
         import os
         home_dir = os.path.expanduser("~")
@@ -42,12 +42,17 @@ with DAG(
             return "rm.dir"
         else:
             return "movie.extract"
-    
+
     start = EmptyOperator(task_id='start')
-    
+
     branch_op = BranchPythonOperator(
             task_id="branch.op",
             python_callable=branch_func
+    )
+
+    rm_dir = BashOperator(
+            task_id="rm.dir",
+            bash_command="rm -rf ~/megabox/tmp/movie_parquet/load_dt={{ds_nodash}}"
     )
 
     t_extract = PythonVirtualenvOperator(
