@@ -29,9 +29,10 @@ with DAG(
     tags=['movie', 'megabox', 'team'],
 ) as dag:
     
-    def extract():
+    def extract(**kwargs):
         from movie_extract.movie_e import req2df
-        df = req2df(load_dt=ds_nodash)
+        ds_nodash = kwargs['ds_nodash']
+        df = req2df(load_dt=ds_nodash)       
     
     start = EmptyOperator(task_id='start')
     
