@@ -33,10 +33,28 @@ with DAG(
         from movie_extract.movie_e import df2parquet
         date = kwargs['ds_nodash']
         df = df2parquet(load_dt=date)
-
+    
+    def branch_func(ds_nodash):
+        import os
+        home_dir = os.path.expanduser("~")
+        path = os.path.join(home_dir, f'megabox/tmp/movie_parquet/load_dt={{ds_nodash}}')
+        if os.path.exists(path):
+            return "rm.dir"
+        else:
+            return "movie.extract"
     
     start = EmptyOperator(task_id='start')
     
+    branch_op = BranchPythonOperator(
+            task_id="branch.op",
+            python_callable=branch_func
+    )
+
+    rm_dir = BashOperator(
+            task_id="rm.dir",
+            bash_command="rm -rf ~/megabox/tmp/movie_parquet/load_dt={{ds_nodash}}",
+    )
+
     t_extract = PythonVirtualenvOperator(
             task_id='movie.extract',
             python_callable=extract,
@@ -46,4 +64,6 @@ with DAG(
 
     end = EmptyOperator(task_id='end')
     
-    start >> t_extract >> end
+    start >> branch_op >> t_extract 
+    branch_op >> rm_dir >> t_extract 
+    t_extract >> end
