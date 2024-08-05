@@ -59,7 +59,8 @@ with DAG(
             task_id='movie.extract',
             python_callable=extract,
             requirements=["git+https://github.com/DE32megabox/extract.git@dev/d2.0.0"],
-            system_site_packages=False
+            system_site_packages=False,
+            trigger_rule='all_done'
     )
 
     end = EmptyOperator(task_id='end')
