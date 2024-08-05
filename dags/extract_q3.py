@@ -37,7 +37,7 @@ with DAG(
     def branch_func(ds_nodash):
         import os
         home_dir = os.path.expanduser("~")
-        path = os.path.join(home_dir, f'megabox/tmp/movie_parquet/load_dt={{ds_nodash}}')
+        path = os.path.join(home_dir, f'megabox/tmp/movie_parquet/load_dt={ds_nodash}')
         if os.path.exists(path):
             return "rm.dir"
         else:
@@ -52,7 +52,7 @@ with DAG(
 
     rm_dir = BashOperator(
             task_id="rm.dir",
-            bash_command="rm -rf ~/megabox/tmp/movie_parquet/load_dt={{ds_nodash}}",
+            bash_command="rm -rf ~/megabox/tmp/movie_parquet/load_dt={{ds_nodash}}"
     )
 
     t_extract = PythonVirtualenvOperator(
