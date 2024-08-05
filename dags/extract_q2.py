@@ -64,5 +64,5 @@ with DAG(
     )
     end = EmptyOperator(task_id='end')
     
-    start >> branch_op >> [rm_dir, t_extract] >> end
+    start >> branch_op >> t_extract >> end
     rm_dir >> t_extract
