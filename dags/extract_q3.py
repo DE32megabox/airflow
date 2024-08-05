@@ -30,9 +30,9 @@ with DAG(
 ) as dag:
     
     def extract(**kwargs):
-        from movie_extract.movie_e import req2df
+        from movie_extract.movie_e import df2parquet
         date = kwargs['ds_nodash']
-        df = req2df(load_dt=date)
+        df = df2parquet(load_dt=date)
 
     
     start = EmptyOperator(task_id='start')
