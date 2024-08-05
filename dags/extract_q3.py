@@ -12,7 +12,7 @@ from airflow.operators.python import (
 )
 
 with DAG(
-    'movie',
+    'extract_q3',
     default_args={
         'depends_on_past': False,
         'retries': 1,
@@ -23,14 +23,17 @@ with DAG(
     max_active_tasks=3,
     description='movie',
     schedule="10 2 * * *",
-    start_date=datetime(2024, 7, 24),
+    start_date=datetime(2021, 9, 1),
+    end_date=datetime(2021, 12, 31),
     catchup=True,
     tags=['movie', 'megabox', 'team'],
 ) as dag:
     
-    def extract():
-        from movie_extract.movie_e import ice_breaking
-        ice_breaking()
+    def extract(**kwargs):
+        from movie_extract.movie_e import req2df
+        date = kwargs['ds_nodash']
+        df = req2df(load_dt=date)
+
     
     start = EmptyOperator(task_id='start')
     
