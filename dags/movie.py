@@ -41,7 +41,7 @@ with DAG(
         from de32_megabox_l.movie_l import ice_breaking
         ice_breaking()
 
-    def branch_func()
+    def branch_func():
         return
     
     start = EmptyOperator(task_id='start')
