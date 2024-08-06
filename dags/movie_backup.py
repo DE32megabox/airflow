@@ -12,7 +12,7 @@ from airflow.operators.python import (
 )
 
 with DAG(
-    'movie',
+    'movie_backup',
     default_args={
         'depends_on_past': False,
         'retries': 1,
@@ -23,7 +23,8 @@ with DAG(
     max_active_tasks=3,
     description='movie',
     schedule="10 2 * * *",
-    start_date=datetime(2024, 7, 24),
+    start_date=datetime(2021, 12, 1),
+    end_date=datetime(2021, 12, 31),
     catchup=True,
     tags=['movie', 'megabox', 'team'],
 ) as dag:
